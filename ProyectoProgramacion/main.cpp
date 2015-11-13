@@ -10,10 +10,10 @@ using namespace std;
 
 struct empleados
 {
-char nombre[50], direccion[25], email[25], telefono[8], dpi[50];//
+char nombre[50], direccion[25], email[25], telefono[25], dpi[50];/////////
 bool estado;
 int codigo;
-int departamento, horassemanales, valorhoras, valorextra;
+int departamento, horassemanales, valorhoras, valorextra, ValorTotal;
 };
 
 struct dpto
@@ -22,31 +22,21 @@ struct dpto
 	int codigo;
 };
 
-struct pagoHoras
-{
-	int dpiEmpleado,codigo;
-	int semana1,semana2,semana3,semana4,semana5,total;
-};
-
  empleados trabajador[100];//crear una variable
  dpto departamento[100];
- pagoHoras horas[100];
 
 int main()
 {
-	int opcion, i=0,x=0, resultadoDpi,resultadoNombre, opcion2, opcion3, opcion4,OpcionEliminar, opcioningreso,opcioncancelar;//
+	int opcion, i=0,x=0, resultadoDpi,resultadoNombre, opcion2, opcion3, opcion4,OpcionEliminar, opcioningreso,opcioncancelar, opcionReportes,ingresoHoras;//
 	char busqueda[50];
-	
+	int horasO, horasE;
+	int reporteDepto;
 		long contadorEmpleados,verificadorEmpleados;////Variables para trabajar con el archivo de empleados
 		long contadorDepto,verificadorDepto;////Variables para trabajar con el archivo de departamentos
-		long contadorHoras,verificadorHoras;////Variables para trabajar con el archivo de departamentos
 //////////////////////////////*************************/////////////////////////////
-			ifstream ingresar("empleados.txt",ios::out|ios::binary); //Crea el archivo clientes
+			ifstream ingresar("empleados.txt",ios::out|ios::binary); //Crea el archivo
 			ifstream ingresar2("departamento.txt",ios::out|ios::binary); //Crea el archivo departamento
 			ifstream ingresar3("horas.txt",ios::out|ios::binary); //Crea el archivo Horas
-			
-
-		
 ////////////////////verifica que el archivo empleados exista
 		    if(ingresar==NULL)
 		        {
@@ -58,9 +48,8 @@ int main()
 		            ingresar.read(reinterpret_cast<char*>(&trabajador[i]),sizeof(empleados));
 		            }
 		        }
-		    ingresar.close();/// cierra el archivo clientes		
+		    ingresar.close();/// cierra el archivo	
 //////////////////////////////////////*********************************////////////////////////////	
-
 		
 ////////////////////verifica que el archivo departamento exista
 		    if(ingresar2==NULL)
@@ -73,23 +62,8 @@ int main()
 		            ingresar2.read(reinterpret_cast<char*>(&departamento[i]),sizeof(dpto));
 		            }
 		        }
-		    ingresar2.close();/// cierra el archivo clientes		
+		    ingresar2.close();/// cierra el archivo		
 //////////////////////////////////////*********************************////////////////////////////	
-
-////////////////////verifica que el archivo departamento exista
-		    if(ingresar3==NULL)
-		        {
-		            ifstream ingresar3("horas.text",ios::out|ios::binary);
-		        }
-		    else{
-		            for (int i=1; i<1000; i++) /// crea el archivo si en caso no existiera
-		            {
-		            ingresar3.read(reinterpret_cast<char*>(&horas[i]),sizeof(pagoHoras));
-		            }
-		        }
-		    ingresar3.close();/// cierra el archivo clientes		
-//////////////////////////////////////*********************************////////////////////////////	
-	
 	
 ///////Inicio del Menu.
 	
@@ -140,30 +114,11 @@ int main()
                             departamento[verificadorDepto].codigo=verificadorDepto-1;
                         }
      ///*****************************
-     
-     
-         	//////////////////////////////******************************************************
-                       	contadorHoras=0;
-                        if (contadorHoras!=1001)
-                        {
-                            while (contadorHoras<1000)
-                            {
-                                contadorHoras++;
-                                if (horas[contadorHoras].codigo!=contadorHoras)
-                                {
-                                    verificadorHoras=contadorHoras;
-                                    contadorHoras=1001;
-                                }
-                            }
-                            horas[verificadorHoras].codigo=verificadorHoras-1;
-                        }
-     ///*****************************
 		
 			switch (opcion)// Inicio Switch Principal
 		{
 			case 1://////////////////////////////////////////////////////////INGRESO
 				system("cls");
-				
 							contadorEmpleados=0;
                             while (contadorEmpleados<1000)
                             {
@@ -186,12 +141,13 @@ int main()
 					trabajador[verificadorEmpleados].codigo=verificadorEmpleados;
 					cout<<"Codigo del Empleado: "<<trabajador[verificadorEmpleados].codigo<<"\n";////genera el codigo
 					cout<<"Numero de dpi ";
-		       		cin>>trabajador[verificadorEmpleados].dpi,50;
+					cin.ignore();
+		       		cin.getline(trabajador[verificadorEmpleados].dpi,50);
 		       		cout<<"Nombre completo ";
-		       		cin.ignore();
+		       		
 					cin.getline(trabajador[verificadorEmpleados].nombre,50);
 		       		cout<<"Telefono movil ";
-		       		cin>>trabajador[verificadorEmpleados].telefono,8;
+		       		cin.getline(trabajador[verificadorEmpleados].telefono,25);
 		       		cout<<"Direccion exacta ";
 		       		cin.ignore();
 					cin.getline(trabajador[verificadorEmpleados].direccion,25);
@@ -206,12 +162,9 @@ int main()
 					cout<<"Escoja el Codigo del Departamento que desea Asignar: ";
 					cin>>trabajador[verificadorEmpleados].departamento;		
 		       		trabajador[verificadorEmpleados].estado=true;
-		       		
-				
 					getch();
 				}
 			break;
-			
 			
 			case 2://///////////////////////////////////////////////////////////BUSQUEDA
 				system("cls");
@@ -292,7 +245,7 @@ int main()
 										system("cls");
 										cout<<"Ingrese el Nuevo Telefono ";
 										cin.ignore();
-										cin.getline(trabajador[buscador].telefono,8);
+										cin.getline(trabajador[buscador].telefono,25);
 									break;	
 									case 4:
 										system("cls");
@@ -349,37 +302,36 @@ int main()
 										system("cls");
 										cout<<"Nombre: "<<trabajador[buscador].nombre<<endl;
                     					cout<<"***************Ingreso de Horas Laboradas*************"<<endl<<endl;
+                    				
                     					cin>>trabajador[buscador].horassemanales;
                     					cout<<endl<<"LAS HORAS HAN SIGO GUARDADAS";
-		                    			break;
-		                    			
-		                    			case 2:
-		                    				system("cls");
-		                    				cout<<trabajador[buscador].nombre<<endl;
+                    					                    					
 		                    				if (trabajador[buscador].horassemanales>=44)
 	                    					{
-	                    						trabajador[buscador].valorhoras=(44*12);
-		                    					trabajador[buscador].valorextra=(trabajador[buscador].horassemanales-44)*(12*1.5);		
+	                    						trabajador[buscador].valorhoras=trabajador[buscador].valorhoras+(44*12);
+		                    					trabajador[buscador].valorextra=trabajador[buscador].valorextra+(trabajador[buscador].horassemanales-44)*(12*1.5);		
 	                    					}
 	                    					else
 	                    					{
-	                    						trabajador[buscador].valorhoras=trabajador[buscador].horassemanales*12;
-			                    			}
-			                    			
-			                    			cout<<"Valor monetario de las horas hasta el momento"<<endl<<endl;
-		                    				cout<<"Ordinario "<<trabajador[buscador].valorhoras<<"....."<<"Extraordinario "<<trabajador[buscador].valorextra<<endl;
-											cout<<"Con un total de "<<trabajador[buscador].valorhoras+trabajador[buscador].valorextra;
-			                    			
-			                    			cout<<"DESEA CANCELAR EL TOTAL DE HORAS....1.SI....2.NO.....";
-												cout<<"Elija una opcion.....";
-												cin>>opcioncancelar;
-												
+	                    						trabajador[buscador].valorhoras=trabajador[buscador].valorhoras+trabajador[buscador].horassemanales*12;
+			                    			}				
+                    					
+		                    			break;	
+		                    			case 2:
+		                    				system("cls");
+		                    				cout<<"Valor monetario de las horas hasta el momento"<<endl<<endl;
+		                    				cout<<"Ordinario "<<trabajador[buscador].valorhoras<<"....."<<"-------Extraordinario "<<trabajador[buscador].valorextra<<endl;
+											cout<<"Con un total de "<<trabajador[buscador].valorhoras+trabajador[buscador].valorextra<<endl<<endl;
+			                    			cout<<"DESEA CANCELAR EL TOTAL DE HORAS....1.SI....2.NO....."<<endl;
+											cout<<"Elija una opcion.....";
+											cin>>opcioncancelar;                     			
+			                    															
 												switch(opcioncancelar)
 												{
 													case 1:	
-														cout<<"......."<<buscador;
-														trabajador[buscador].horassemanales=0;	
-															
+														trabajador[buscador].horassemanales=0;
+														trabajador[buscador].valorextra=0;
+														trabajador[buscador].valorhoras=0;
 													break;
 													
 													case 2:
@@ -398,10 +350,10 @@ int main()
                     		
                     	case 4:
                     		
-                    	break;
-                    		
+                    	break;		
 					}
 					}
+					
 					if(resultadoDpi==0 and resultadoNombre==0 )
 					{	cout<<"El Usuario no Existe";
 						buscador=1000;
@@ -410,18 +362,16 @@ int main()
 						               					
 				}	//fin del for de empleados	
                     
-					
-					
+			
 			getch();
 			break;
-			
 			
 			case 3:////////////////////////////////////////////////////////////////////DEPARTAMENTO
 				system("cls");
 				cout<<"**********Departamentos************"<<endl<<endl;
 				cout<<"1. Nuevo Departamentos"<<endl;
 				cout<<"2. Ver Departamentos"<<endl;
-				cout<<"Escoja una opcion";
+				cout<<"Escoja una opcion.....";
 				cin>>opcion4;
 				
 				switch (opcion4)// Inicio Switch Departamentos
@@ -469,29 +419,66 @@ int main()
 			case 4:///////////////////////////////////////////////////////////////////REPORTE
 				system("cls");
 				cout<<"***********Reportes y calculo de nomina***********"<<endl<<endl;
-				cout<<"1. Reporte General";
-				cout<<"2. Reporte Individual";
-				cout<<"3. Reporte de Personal que gana mas de Q2500.00";
+				cout<<"1. Reporte General"<<endl;
+				cout<<"2. Reporte por Departamento"<<endl;
+				cout<<"3. Reporte de Personal que gana mas de Q2500.00"<<endl;
+				cin>>opcionReportes;
 				
-				switch (opcion4)// Inicio Switch Departamentos
+				switch (opcionReportes)
 				{
 					case 1:	
-						system("cls");
+						system("cls"); 
 						cout<<"*********Reporte General**********"<<endl<<endl;
+						
+						for(int a=1;a<verificadorEmpleados;a++)
+						{	cout<<"-----------------------------------------"<<endl;
+							cout<<"Nombre empleado: "<<trabajador[a].nombre<<endl;
+							cout<<"Nombre departamento: "<<departamento[a].nombre<<endl;
+							cout<<"Valor Hora: "<<trabajador[a].valorhoras<<endl;
+							cout<<"Valor Extra: "<<trabajador[a].valorextra<<endl;
+						}
 						
 						break;
 					
 					case 2:
 						system("cls");
-						cout<<"*********Reporte individual********"<<endl;
-						
+								cout<<"*********Reporte Por departamento********"<<endl;
+								for(int a=1;a<verificadorDepto;a++)
+								{	cout<<"-----------------------------------------"<<endl;
+									cout<<"Codigo: "<<departamento[a].codigo<<endl;
+									cout<<"Nombre: "<<departamento[a].nombre<<endl;
+								}
+								cout<<"Escoja El departamento que desee el reporte"<<endl;
+								cin>>reporteDepto;
+								
+								for(int a=1;a<verificadorEmpleados;a++)
+								{
+									if(departamento[a].codigo==reporteDepto)
+									{
+									cout<<"-----------------------------------------"<<endl;
+									cout<<"Nombre empleado: "<<trabajador[a].nombre<<endl;
+									cout<<"Valor Hora: "<<trabajador[a].valorhoras<<endl;
+									cout<<"Valor Extra: "<<trabajador[a].valorextra<<endl;
+									}
+								}
+									
 						break;
+						
 					case 3:
 						system("cls");
 						cout<<"*********Reporte de personal que gana mas de Q2500.00********"<<endl;
-						
+									for(int a=1;a<verificadorEmpleados;a++)
+								{
+									if(trabajador[a].ValorTotal>=2500)
+									{
+									cout<<"-----------------------------------------"<<endl;
+									cout<<"Nombre empleado: "<<trabajador[a].nombre<<endl;
+									cout<<"Valor Hora: "<<trabajador[a].valorhoras<<endl;
+									cout<<"Valor Extra: "<<trabajador[a].valorextra<<endl;
+									cout<<"Valor Extra: "<<trabajador[a].ValorTotal<<endl;
+									}
+								}
 						break;
-
 				}
 
 				getch();
@@ -505,8 +492,7 @@ int main()
         			{
 			   	     agregar.write(reinterpret_cast<char*>(&trabajador[c]),sizeof(empleados));
         			}
-				agregar.close();///cierra el archivo clientes	
-				
+				agregar.close();///cierra el archivo 	
 				
 				ofstream agregar2("departamento.txt",ios::out|ios::binary);
                 for ( int c=1; c<verificadorDepto; c++)
@@ -514,19 +500,9 @@ int main()
 			   	     agregar2.write(reinterpret_cast<char*>(&departamento[c]),sizeof(dpto));
         			}
 				agregar2.close();///cierra el archivo departamentos
-				
-				
-					ofstream agregar3("horas.txt",ios::out|ios::binary);
-                for ( int c=1; c<verificadorEmpleados; c++)
-        			{
-			   	     agregar3.write(reinterpret_cast<char*>(&horas[c]),sizeof(pagoHoras));
-        			}
-				agregar3.close();///cierra el archivo horas		
     				
 		
 		} // fin del switch principal
-	
-		
 		
 		
 	}while(opcion!=5); // fin del while principal
